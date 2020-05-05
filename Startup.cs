@@ -28,7 +28,7 @@ namespace Fisher.Bookstore
             );
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddSingleton<IBooksRepository, TestBooksRepository>();
-            services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+            //services.AddScoped<IAuthorsRepository, AuthorsRepository>();
             services.AddSingleton<IAuthorsRepository, TestAuthorsRepository>();
         }
 
