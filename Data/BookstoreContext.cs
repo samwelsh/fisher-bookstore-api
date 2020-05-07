@@ -13,8 +13,7 @@ namespace Fisher.Bookstore.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<BookAuthor>()
-            .HasKey(ba => new { ba.BookId, ba.AuthorId });
+            builder.Entity<BookAuthor>().HasKey(ba => new { ba.BookId, ba.AuthorId });
 
             builder.Entity<BookAuthor>()
             .HasOne(ba => ba.Book)
