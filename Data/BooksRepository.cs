@@ -7,7 +7,7 @@ namespace Fisher.Bookstore.Services
 
     public class BooksRepository : IBooksRepository
     {
-        private readonly BookstoreContext db;
+        private readonly BookstoreContext db; 
 
         public BooksRepository(BookstoreContext db)
         {
