@@ -28,6 +28,30 @@ namespace Fisher.Bookstore
             );
             services.AddScoped<IBooksRepository, BooksRepository>();
             services.AddSingleton<IBooksRepository, TestBooksRepository>();
+            //services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+            services.AddSingleton<IAuthorsRepository, TestAuthorsRepository>();
+
+            string domain = $"https://{COnfiguration["Auth0:Domain"]}/";
+
+            services.AddAuthentication(options => 
+            {
+                options.DefaultAuthenticationScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChellengeScheme = JqtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = domain;
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:message", domain)));
+            });
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +70,9 @@ namespace Fisher.Bookstore
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
+            app.UseAuthorization();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
